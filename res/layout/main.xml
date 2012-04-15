@@ -2,13 +2,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:padding="5dp"
     android:orientation="vertical" >
 
     <TextView
         android:id="@+id/headline"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="5dp"
+        android:layout_marginBottom="5dp"
         android:text="@string/headline"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
@@ -16,28 +17,29 @@
         android:id="@+id/text"
         android:layout_width="match_parent"
         android:layout_height="0dip"
+        android:layout_marginBottom="5dp"
         android:layout_weight="1"
-        android:padding="5dp"
         android:text="@string/text" />
-
+
     <TextView
         android:id="@+id/licensing_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
         android:text="@string/licensing"  android:autoLink="all"
         android:textAppearance="?android:attr/textAppearanceSmall" />
-
+
     <TextView
         android:id="@+id/author_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
         android:text="@string/author" android:autoLink="all" />
 
     <Button
         android:id="@+id/backupBtn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="5dp"
         android:onClick="onEvtBackup"
         android:text="@string/btn_backup" />
 

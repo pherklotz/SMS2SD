@@ -32,7 +32,7 @@ import android.widget.Toast;
 public class TextBackupActivity extends Activity implements Runnable {
 
 	private final static String TAG = TextBackupActivity.class.getName();
-	private final static int TOAST_TIME = 1000;
+	private final static int TOAST_TIME = 2000;
 	private ProgressDialog progressDialog;
 	private SmsAccessManager smsAccess;
 	private static final int HANDLER_WHAT_CLOSE_PROGRESS_DIALOG = 1;
@@ -52,8 +52,9 @@ public class TextBackupActivity extends Activity implements Runnable {
 					.getExternalFilesDir(null).getAbsolutePath());
 			text.setText(backupText);
 		} else {
-			Toast.makeText(this, R.string.error_cant_write_file, TOAST_TIME)
+			Toast.makeText(this, R.string.error_no_sd_mounted, TOAST_TIME)
 					.show();
+			finish();
 		}
 	}
 
@@ -126,7 +127,6 @@ public class TextBackupActivity extends Activity implements Runnable {
 		try {
 			String dateStr = DateFormat.format("yyyy-MM-dd_hhmmss",
 					System.currentTimeMillis()).toString();
-
 			File backupFile = new File(getExternalFilesDir(null), "sms_backup_"
 					+ dateStr + ".xml");
 
