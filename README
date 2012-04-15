@@ -1,3 +1,5 @@
+Project: SMS2SD
 License: GNU GPLv3 http://www.gnu.org/licenses/gpl-3.0.txt
 Author: Peter Herklotz 2012 dev@cloudeta.com
+Project source: https://github.com/pherklotz/SMS2SD 
 Description: Backups text messages on an Android phone in a file at the SD Card
