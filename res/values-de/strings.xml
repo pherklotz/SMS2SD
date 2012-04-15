@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">SMS 2 SD</string>
+    <string name="btn_backup">Sicherung starten</string>
+    <string name="error_cant_write_file">Datei konnte nicht geschrieben werden.</string>
+    <string name="info_backup_successful">SMS wurden erfolgreich gesichert.</string>
+    <string name="headline">Sichere deine SMS</string>
+    <string name="text">Um die App nutzen zu können, muss sich eine SD-Karte im Gerät befinden.\n\nDie Sicherungsdatei wird in das Verzeichnis \&quot;%s\&quot; geschrieben.\n\nÜber einen Kommentar, Anregungen oder Kritik würde ich mich freuen :)</string>
+    <string name="app_description">Sichert SMS in einer XML Datei auf der SD Karte.</string>
+    <string name="progress_dialog_create_backup">Sichere SMS...</string>
+    <string name="licensing">Lizenz: GNU GPLv3 http://www.gnu.org/licenses/gpl-3.0.txt</string>
+    <string name="author">Author: Peter Herklotz 2012 dev@cloudeta.com\nSource: https://github.com/pherklotz/SMS2SD</string>
+</resources>

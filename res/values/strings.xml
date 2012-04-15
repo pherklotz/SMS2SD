@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">SMS 2 SD</string>
+    <string name="btn_backup">Start backup</string>
+    <string name="error_cant_write_file">File write error.</string>
+    <string name="info_backup_successful">Backup successful.</string>
+    <string name="headline">Backup your short messages</string>
+    <string name="text">To use the app, a SD-Card has to be in the device.\n\nThe backup files where stored at \&quot;%s\&quot;.\n\n \n\nHave fun and leave a comment :)</string>
+    <string name="app_description">Backups text messages in a XML file. </string>
+    <string name="progress_dialog_create_backup">Create backup...</string>
+    <string name="licensing">License: GNU GPLv3 http://www.gnu.org/licenses/gpl-3.0.txt</string>
+    <string name="author">Author: Peter Herklotz 2012 dev@cloudeta.com\nSource: https://github.com/pherklotz/SMS2SD</string>
+
+</resources>
