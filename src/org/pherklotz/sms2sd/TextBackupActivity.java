@@ -12,8 +12,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 import org.pherklotz.sms2sd.SmsAccessManager.SmsFolder;
-import org.pherklotz.sms2sd.backup.SmsBackupCreator;
-import org.pherklotz.sms2sd.backup.XmlBackupCreator;
+import org.pherklotz.sms2sd.writer.SmsWriter;
+import org.pherklotz.sms2sd.writer.XmlSmsWriter;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -29,6 +29,13 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+/**
+ * Starting activity. The layout is very simple. It shows some informations and
+ * a button. A click on the button starts the backup process. During the
+ * progress a {@link ProgressDialog} is visible.
+ * 
+ * @author pherklotz
+ */
 public class TextBackupActivity extends Activity implements Runnable {
 
 	private final static String TAG = TextBackupActivity.class.getName();
@@ -39,40 +46,9 @@ public class TextBackupActivity extends Activity implements Runnable {
 	private static final int HANDLER_WHAT_ERROR_MESSAGE = 2;
 	private static final int HANDLER_WHAT_SUCCESSFULL = 3;
 
-	/** Called when the activity is first created. */
-	@Override
-	public void onCreate(final Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		smsAccess = new SmsAccessManager(getContentResolver());
-		setContentView(R.layout.main);
-		TextView text = (TextView) findViewById(R.id.text);
-		String state = Environment.getExternalStorageState();
-		if (Environment.MEDIA_MOUNTED.equals(state)) {
-			String backupText = getString(R.string.text, this
-					.getExternalFilesDir(null).getAbsolutePath());
-			text.setText(backupText);
-		} else {
-			Toast.makeText(this, R.string.error_no_sd_mounted, TOAST_TIME)
-					.show();
-			finish();
-		}
-	}
-
-	public void onEvtBackup(final View view) {
-		switch (view.getId()) {
-		case R.id.backupBtn:
-			progressDialog = ProgressDialog.show(TextBackupActivity.this, "",
-					getString(R.string.progress_dialog_create_backup));
-			new Thread(this).start();
-
-			break;
-		default:
-			break;
-		}
-	}
-
-	// Define the Handler that receives messages from the thread and update the
-	// progress
+	/**
+	 * Define the Handler that receives messages from the backup thread.
+	 */
 	final Handler handler = new Handler() {
 		@Override
 		public void handleMessage(final Message msg) {
@@ -96,11 +72,58 @@ public class TextBackupActivity extends Activity implements Runnable {
 	};
 
 	/**
-	 * @throws IOException
-	 * 
+	 * {@inheritDoc}
 	 */
-	private void backupSms(final SmsFolder folder,
-			final SmsBackupCreator creator) throws IOException {
+	@Override
+	public void onCreate(final Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		smsAccess = new SmsAccessManager(getContentResolver());
+		setContentView(R.layout.main);
+		TextView text = (TextView) findViewById(R.id.text);
+		String state = Environment.getExternalStorageState();
+		// If an SD-Card is mounted.
+		if (Environment.MEDIA_MOUNTED.equals(state)) {
+			String backupText = getString(R.string.text, this
+					.getExternalFilesDir(null).getAbsolutePath());
+			text.setText(backupText);
+		} else {
+			Toast.makeText(this, R.string.error_no_sd_mounted, TOAST_TIME)
+					.show();
+			finish();
+		}
+	}
+
+	/**
+	 * OnClick-Handler for the Backup-Button. Triggers the backup.
+	 * 
+	 * @param view
+	 *            The clicked component.
+	 */
+	public void onEvtBackup(final View view) {
+		switch (view.getId()) {
+		case R.id.backupBtn:
+			progressDialog = ProgressDialog.show(TextBackupActivity.this, "",
+					getString(R.string.progress_dialog_create_backup));
+			new Thread(this).start();
+
+			break;
+		default:
+			break;
+		}
+	}
+
+	/**
+	 * Reads all text messages from the given folder and create for each a
+	 * record in the {@link SmsWriter}.
+	 * 
+	 * @param folder
+	 *            The message folder.
+	 * @param creator
+	 *            the creator
+	 * @throws IOException
+	 */
+	private void backupSms(final SmsFolder folder, final SmsWriter writer)
+			throws IOException {
 		Cursor c = smsAccess.getFolder(folder);
 		if (c != null && c.moveToFirst()) {
 			Log.d(TAG, "Starting backup");
@@ -108,7 +131,7 @@ public class TextBackupActivity extends Activity implements Runnable {
 				String address = c.getString(c.getColumnIndex("address"));
 				String body = c.getString(c.getColumnIndex("body"));
 				String date = c.getString(c.getColumnIndex("date"));
-				creator.writeRecord(address, date, folder.name(), body);
+				writer.writeRecord(address, date, folder.name(), body);
 
 			} while (c.moveToNext());
 			Log.d(TAG, "Finishing backup");
@@ -116,22 +139,19 @@ public class TextBackupActivity extends Activity implements Runnable {
 		c.close();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Runnable#run()
-	 */
 	@Override
 	public void run() {
+		// Needed to close the ProgressDialog.
 		Looper.prepare();
 		try {
+			// example file name: sms_backup_2012-05-23_133700.xml
 			String dateStr = DateFormat.format("yyyy-MM-dd_hhmmss",
 					System.currentTimeMillis()).toString();
 			File backupFile = new File(getExternalFilesDir(null), "sms_backup_"
 					+ dateStr + ".xml");
 
 			OutputStream out = new FileOutputStream(backupFile);
-			SmsBackupCreator backupCreator = new XmlBackupCreator();
+			SmsWriter backupCreator = new XmlSmsWriter();
 			backupCreator.setOutputstream(out);
 			backupCreator.startBackup();
 			backupSms(SmsFolder.INBOX, backupCreator);
