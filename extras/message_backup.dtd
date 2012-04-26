@@ -1,0 +1,7 @@
+<!ELEMENT messages (msg)+>
+<!ELEMENT msg (#PCDATA)>
+<!ATTLIST msg
+	address 	CDATA			#REQUIRED
+	date		CDATA			#REQUIRED
+	type		(INBOX|OUTBOX)	#REQUIRED
+>
